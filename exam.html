@@ -1,0 +1,194 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var answerObject = [];
+            var unAnswerObject = [];
+            var qNo = 0;
+            var jsonObjectFromServer = {
+                'question1': {
+                    'qNo': '1',
+                    'id': '1',
+                    'content1': 'Ravi saw 10 bears and 5 lions. How many animals did he see altogether?',
+                    'content2': 'Ravi saw <input> animals altogether'
+                },
+                'question2': {
+                    'qNo': '2',
+                    'id': '2',
+                    'content1': 'Hannah has 2 blue pens and 7 red pens. How many pens does she have altogether?',
+                    'content2': 'Hannah has <input> pens altogether'
+                },
+                'question3': {
+                    'qNo': '3',
+                    'id': '3',
+                    'content1': 'Ravi saw 10 bears and 5 lions. How many animals did he see altogether?',
+                    'content2': 'Ravi saw <input> animals altogether'
+                },
+                'question4': {
+                    'qNo': '4',
+                    'id': '4',
+                    'content1': 'Hannah has 2 blue pens and 7 red pens. How many pens does she have altogether?',
+                    'content2': 'Hannah has <input> pens altogether'
+                },
+                'question5': {
+                    'qNo': '5',
+                    'id': '5',
+                    'content1': 'Ravi saw 10 bears and 5 lions. How many animals did he see altogether?',
+                    'content2': 'Ravi saw <input> animals altogether'
+                }
+            };
+            calculation();
+            $('#publishExam').click(function () {
+                var a = confirm('Are you sure to finish the exam?');
+                if (a) {
+                    $('#resultShow').empty();
+                    $('#getResult').hide();
+                    $('#qIndex').hide();
+                    $('#graphics').hide();
+                    $('#questions').hide();
+                    $('#sentence').hide();
+                    console.log(answerObject);
+                    for (obj in jsonObjectFromServer) {
+                        if (answerObject.length != 0) {
+                            for (answerObj in answerObject) {
+                                if (answerObj.qNo != obj.qNo) {
+                                    unAnswerObject.push({
+                                        'qNo': answerObj.qNo,
+                                        'result': 'Not Answered'
+                                    });
+                                }
+                            }
+                        } else {
+                            unAnswerObject.push({
+                                'qNo': obj.qNo,
+                                'result': 'Not Answered'
+                            });
+                        }
+                    }
+
+                    for (var i = 0; i < answerObject.length; i++) {
+                        if (answerObject[i].result == true) {
+                            $('#resultShow').append('<tr><td>' + answerObject[i].qNo + '</td><td bgcolor="green">Correct</td></tr>');
+                        } else {
+                            $('#resultShow').append('<tr><td>' + answerObject[i].qNo + '</td><td bgcolor="red">Incorrect</td></tr>');
+                        }
+                    }
+                    for (var j = 0; i < unAnswerObject.length; j++) {
+                        $('#resultShow').append('<tr><td>' + unAnswerObject[j].qNo + '</td><td bgcolor="blue">' + unAnswerObject[j].result + '</td></tr>')
+                    }
+                } else {
+                    return false;
+                }
+
+            });
+            $('#getResult').click(function () {
+                checkAnswer();
+                $('#qIndex #' + qNo).hide();
+                $('#sentence').empty();
+                $('#questions').empty();
+                $('#graphics>input').val('');
+            });
+
+            function calculation() {
+                $.each(jsonObjectFromServer, function (key, val) {
+                    $('#qIndex').append('<input type="button" id="' + val.qNo + '" value="' + val.qNo + '"/>');
+                });
+                $('#qIndex').click(function (event) {
+                    var questionNo = event.target.id;
+                    qNo = questionNo;
+                    $.each(jsonObjectFromServer, function (key, val) {
+                        if (val.qNo == questionNo) {
+                            $('#questions').empty();
+                            $('#questions').append(val.content1);
+                            $('#sentence').empty();
+                            $('#sentence').append(val.content2.replace('<input>', '<input type="text" class="textArea" id="sentenceAnswer">'));
+                        }
+                    });
+                });
+
+            }
+
+            function checkAnswer() {
+                var numberOne = parseInt($('#numberOne').val());
+                var sign = $('#sign').val();
+                var secondNumber = parseInt($('#secondNumber').val());
+                var finalAnswer = $('#finalAnswer').val();
+                var sentenceAnswer = parseInt($('#sentenceAnswer').val());
+                var answer = eval(numberOne + sign + secondNumber);
+                if (answer == finalAnswer && answer == sentenceAnswer) {
+                    answerObject.push({
+                        'qNo': qNo,
+                        'result': true
+                    });
+                } else {
+                    answerObject.push({
+                        'qNo': qNo,
+                        'result': false
+                    });
+                }
+                console.log(answerObject);
+            }
+        });
+    </script>
+
+
+
+    <style>
+        .textArea {
+            border-radius: 10px;
+            max-height: 60px;
+            font-size: 30px;
+            line-height: 20px;
+            width: 65px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #E6F36C;
+            box-shadow: 0px 0px 5px #88F896;
+            text-align: center;
+            box-shadow: 0px 0px 5px #76E4E1;
+        }
+        
+        .signArea {
+            border-radius: 40px;
+            max-height: 60px;
+            font-size: 30px;
+            line-height: 20px;
+            width: 65px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #F1F506;
+            text-align: center;
+            box-shadow: 0px 0px 5px #FB7102;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div id="qIndex">
+        </div>
+        <div id="questions"></div>
+        <input type="hidden" id="qNo" />
+        <div id="graphics">
+            <input type="text" class="textArea" id="numberOne" />
+            <input type="text" class="signArea" id="sign" />
+            <input type="text" class="textArea" id="secondNumber" />=
+            <input type="text" class="textArea" id="finalAnswer" />
+        </div>
+        <br/>
+        <div id="sentence"></div>
+    </div>
+    <input type="button" id="getResult" value="Submit" />
+    <input type="button" id="publishExam" value="Finish Exam" />
+    <table id="resultShow">
+        <tr>
+            <th>Question No</th>
+            <th>Answer</th>
+        </tr>
+    </table>
+
+</body>
+
+</html>

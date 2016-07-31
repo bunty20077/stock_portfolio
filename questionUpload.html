@@ -1,0 +1,167 @@
+<html>
+
+<head>
+    
+      <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <style>
+        html {
+            font-family: cursive;
+        }
+        
+        input {
+            border-radius: 10px;
+            max-height: 60px;
+            font-size: 30px;
+            line-height: 20px;
+            width: 65px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #E6F36C;
+            box-shadow: 0px 0px 5px #88F896;
+            text-align: center;
+            box-shadow: 0px 0px 5px #76E4E1;
+        }
+        
+        #question,
+        #finalAns {
+            border-radius: 10px;
+            max-height: 60px;
+            font-size: 30px;
+            line-height: 20px;
+            width: 300px;
+            min-height: 100px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #E6F36C;
+            box-shadow: 0px 0px 5px #88F896;
+            box-shadow: 0px 0px 5px #76E4E1;
+            overflow-y: scroll;
+            line-height: 1.2;
+        }
+        
+        #getPreview,#finalSave {
+            width: 150px;
+            height: 50px;
+            background: #68C78A;
+            color: #fff;
+            font-family: cursive;
+            line-height: 1;
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .signArea {
+            border-radius: 40px;
+            max-height: 60px;
+            font-size: 30px;
+            line-height: 20px;
+            width: 65px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #F1F506;
+            text-align: center;
+            box-shadow: 0px 0px 5px #FB7102;
+            overflow-y: scroll;
+            line-height: 1.2;
+        }
+        
+        #inputArea {
+            width: 600px;
+            margin: 0px auto;
+            border: 1px solid #E6F36C;
+            box-shadow: 0px 0px 10px #965A5A;
+            padding: 10px;
+        }
+        
+        #questionDiv,
+        #finalAnsDiv,
+        #prvwBtn,
+        #previewDiv,
+        #ansPreviewDiv {
+            position: relative;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#finalSave').click(function(){
+                alert('Question saved successfully under barch '+$('#batchDiv').val() +' and Subject '+$('#subjectDiv').val());
+            })
+            $('#getPreview').click(function () {
+                $('#previewDiv').empty();
+                $('#ansPreviewDiv').empty();
+                var question = $('#question').val();
+                var questionTemp = question.split(' ');
+                var counter = 0;
+                for (var i = 0; i < questionTemp.length; i++) {
+                    var tmp = questionTemp[i];
+                    try {
+                        if (isNaN(tmp)) {
+                            $('#previewDiv').append(' ' + questionTemp[i] + ' ');
+                        } else {
+                            counter++;
+                            $('#previewDiv').append(' <input type="text" readonly="readonly" value=' + tmp + ' /> ');
+                        }
+                    } catch (err) {}
+                }
+                for (var i = 0; i < counter; i++) {
+                    if (i != counter - 1) {
+                        $('#ansPreviewDiv').append(' <input type="text"> ' + ' <input type="text" placeholder="sign"> ');
+                    } else {
+                        $('#ansPreviewDiv').append(' <input type="text"> ');
+                    }
+                }
+                $('#ansPreviewDiv').append(' = ' + ' <input type="text"> ');
+                var tmp = $('#finalAns').val();
+                var tempAns = tmp.split(' ');
+                $('#ansPreviewDiv').append('<br/>')
+                for (var j = 0; j < tempAns.length; j++) {
+                    if (isNaN(tempAns[j])) {
+                        $('#ansPreviewDiv').append(' ' + tempAns[j] + ' ');
+                    } else {
+                        $('#ansPreviewDiv').append(' <input type="text" readonly="readonly" value="' + tempAns[j] + '"> ');
+                    }
+                }
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+
+        <div id="inputArea">
+            <div><span>Select Batch:</span>
+                <select id="batchDiv">
+                    <option>Demo Batch1</option>
+                    <option>Demo Batch2</option>
+                    <option>Demo Batch3</option>
+                </select>
+            </div>
+            <div><span>Select Subject:</span>
+                <select id="subjectDiv">
+                    <option>Demo Sub1</option>
+                    <option>Demo Sub2</option>
+                    <option>Demo Sub3</option>
+                </select>
+            </div>
+            <div id="questionDiv"><span>Question:</span>
+                <textarea name="nowrap" id="question" cols="30" rows="3" wrap="hard"></textarea>
+            </div>
+            <div id="finalAnsDiv"><span>Answer :</span>
+                <textarea name="nowrap" id="finalAns" cols="30" rows="3" wrap="hard" /></textarea>
+            </div>
+
+            <div id="prvwBtn">
+                <input type="button" id="getPreview" value="preview" />
+            </div>
+            <div id="previewDiv"></div>
+            <div id="ansPreviewDiv"></div>
+        <center><button id="finalSave">Save Question</button></center>
+        </div>
+</body>
+
+</html>
